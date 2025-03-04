@@ -6,12 +6,16 @@ import cookieParser from 'cookie-parser';
 import messageRoutes from './routes/messaageRoutes.js'
 import cors from 'cors'
 import { app, server } from './config/socket.js';
+import path from "path"
+
 
 
 const port = 8000 || process.env.port ;
 
 dotenv.config();
 connectDB();
+
+const __dirname=path.resolve()
 
 app.use(express.json({ limit: '50mb' })); // Increase limit
 app.use(express.urlencoded({ limit: '50mb', extended: true })); 
@@ -23,6 +27,13 @@ app.get('/', (req, res) => {
   
 app.use('/api/auth',authRoute)
 app.use('/api/messages',messageRoutes)
+
+if(process.env.NODE_ENV === "production"){
+  app.use(express.static(path.join(__dirname,"../Frontend/dist")));
+  app.get("*",(req,res)=>{
+    res.sendFile(path.join(__dirname,"../Frontend","dist","index.html"))
+  })
+}
 
 server.listen(port,()=>{
     console.log(`server is running at port ${port}`);
