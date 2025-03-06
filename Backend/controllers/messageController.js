@@ -67,3 +67,29 @@ export const sendMessage=async(req,res)=>{
         res.status(500).json({message:"internal server error"})
     }
 }
+
+export const deleteMessage = async (req, res) => {
+    try {
+      const userId = req.user._id; // Fix destructuring
+      const { messageId } = req.body;
+  
+      // Find the message by ID
+      const messageData = await Message.findById(messageId);
+      if (!messageData) {
+        return res.status(404).json({ success: false, message: "Message not found" });
+      }
+  
+    //   // Check if the logged-in user is the owner of the message
+    //   if (messageData.userId.toString() !== userId.toString()) {
+    //     return res.status(401).json({ success: false, message: "Unauthorized Action" });
+    //   }
+  
+      // Delete the message
+      await Message.findByIdAndDelete(messageId);
+  
+      res.json({ success: true, message: "Message history deleted" });
+    } catch (error) {
+      console.error("Error deleting message:", error);
+      res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+  };

@@ -5,9 +5,10 @@ import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 import { useAuthstore } from "../store/useAuthStore";
 import { formatMessageTime } from "../lib/util";
+import { Delete } from "lucide-react";
 
 const ChatContainer = () => {
-  const { messages, getMessages, isMessagesLoading, selectedUser,subscribeToMessages ,unsubscribeFromMessages} = useChatStore();
+  const { messages, getMessages, isMessagesLoading, selectedUser,subscribeToMessages ,unsubscribeFromMessages,deleteMessage} = useChatStore();
   const { authUser } = useAuthstore();
   const messageRef=useRef(null)
 
@@ -25,6 +26,15 @@ const ChatContainer = () => {
     messageRef.current.scrollIntoView({behavior:"smooth"})
     }
   },[messages])
+
+  const handleDelete = async (messageId) => {
+    try {
+      await deleteMessage(messageId);
+
+    } catch (error) {
+      console.error("Failed to delete message:", error);
+    }
+  };
 
   if (isMessagesLoading) return <div>Loading...</div>;
   return (
@@ -59,7 +69,7 @@ const ChatContainer = () => {
                 {formatMessageTime(message.createdAt)}
               </time> 
             </div>
-            <div className="chat-bubble flex flex-col">
+            <div className="chat-bubble flex flex-col relative group">
               {message.image && (
                 <img
                   src={message.image}
@@ -67,6 +77,14 @@ const ChatContainer = () => {
                 />
               )}
               {message.text && <p>{message.text}</p>}
+              {message.senderId === authUser._id && (
+                <button
+                  onClick={() => handleDelete(message._id)}
+                   className="absolute top-0 right-0 text-red-500 text-xs hover:underline flex items-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                >
+                  <Delete  className="w-4 h-4"/>
+                </button>
+              )}
             </div>
           </div>
         ))}

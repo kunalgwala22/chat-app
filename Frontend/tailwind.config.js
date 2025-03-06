@@ -26,7 +26,7 @@ export default {
       "pastel",
       "fantasy",
       "wireframe",
-      "black",
+      "black",  
       "luxury",
       "dracula",
       "cmyk",

@@ -61,6 +61,22 @@ subscribeToMessages:()=>{
 unsubscribeFromMessages:()=>{
 const socket=useAuthstore.getState().socket
 },
+ deleteMessage:async(messageId) => {
+    try {
+      const res = await axiosInstance.post("/messages/delete-message",{messageId})
+      set((state) => ({
+        messages: state.messages.filter((msg) => msg._id !== messageId),
+      }));
+      if (res.data.success) {
+        toast.success(res.data.message);
+      } else {
+        toast.error(res.data.message);
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+    }
+  },
 setSelectedUser:(selectedUser)=>{set({selectedUser})},
 
 

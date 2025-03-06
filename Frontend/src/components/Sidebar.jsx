@@ -3,6 +3,7 @@ import { useChatStore } from "../store/useChatStore";
 import SidebarSkeleton from "./skeleton/SidebarSkeleton";
 import { Users } from "lucide-react";
 import { useAuthstore } from "../store/useAuthStore";
+import SearchInput from "./SeachInput";
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUserLoading } =useChatStore();
@@ -37,6 +38,7 @@ const [showOnlineOnly,setShowOnlineOnly]=useState(false)
           </label>
           <span className="text-xs text-zinc-500">({onlineUsers.length - 1} online)</span>
         </div>
+        <SearchInput />
 
       </div>
       <div className="overflow-y-auto w-full py-3">
